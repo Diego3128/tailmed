@@ -14,14 +14,14 @@ export default function App() {
           <span>{translations.header.slogan.en}</span>
         </div>
       </header>
-      <div className="container mx-auto mt-4">
+      <div className="container mx-auto mt-4 pb-10">
         <h2 className="capitalize font-black text-3xl text-center md:w-2/3 md:mx-auto">
           {" "}
           {translations.app.sectionTitle.en}{" "}
           <span className="text-indigo-700">vet</span>
         </h2>
 
-        <div className="mt-12 md:flex">
+        <div className="p-3 md:p-0 mt-12 flex flex-col md:flex-row gap-4 md:gap-8 items-start">
           <PetForm />
           <PetList />
         </div>

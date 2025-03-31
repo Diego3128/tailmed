@@ -1,18 +1,16 @@
 import { translations } from "../data/localized-strings";
 import InputError from "./InputError";
 import { DraftPatient } from "../types";
+import { usePatientStore } from "../stores/store";
 // 3rd party libraries || packages
 import { useForm, SubmitHandler } from "react-hook-form";
 import { format } from "date-fns";
 
-const savePatient: SubmitHandler<DraftPatient> = (data) => {
-  console.log("only shown when all inputs are valid.");
-  console.log(data);
-};
-
 export default function PatientForm() {
+  const addNewPatient = usePatientStore((state) => state.addNewPatient);
+
   const formDefaultValues: DraftPatient = {
-    name: "diego",
+    name: "",
     caretaker: "",
     email: "",
     date: format(new Date(), "yyyy-MM-dd"),
@@ -21,23 +19,29 @@ export default function PatientForm() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<DraftPatient>({ defaultValues: formDefaultValues });
-  //pass default value
+
+  const savePatient: SubmitHandler<DraftPatient> = (data) => {
+    addNewPatient(data);
+    reset();
+  };
 
   return (
-    <div className="md:w-1/2 lg:w-2/5 mx-5">
-      <h2 className="font-black text-3xl text-center">
+    <div className=" px-3.5 pt-6 md:flex-1/2 lg:flex-2/5 bg-white shadow-xl rounded-2xl border border-gray-300 relative overflow-hidden">
+      <div className="absolute -top-5 -right-5 w-25 h-25 bg-indigo-700 rounded-full opacity-40 "></div>
+      <h2 className="font-black text-3xl text-center z-10 relative">
         {translations.petForm.title.en}
       </h2>
 
-      <p className="text-lg mt-5 text-center mb-10">
+      <p className="text-xl mt-5 text-center mb-10">
         {translations.petForm.description.en}
       </p>
 
       <form
         onSubmit={handleSubmit(savePatient)}
-        className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
+        className="bg-white shadow-md shadow-indigo-500 rounded-lg py-10 px-5 mb-10"
         noValidate
       >
         <div className="mb-5">
