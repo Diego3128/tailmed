@@ -38,5 +38,39 @@ export type Translation = {
     symptomsLabel: TranslationKeys;
     symptomsPlaceholder: TranslationKeys;
     submitButton: TranslationKeys;
+    cancelButton: TranslationKeys;
+    errors: {
+      requiredName: TranslationKeys;
+      maxLengthName: TranslationKeys;
+      requiredCaretaker: TranslationKeys;
+      maxLengthCaretaker: TranslationKeys;
+      requiredEmail: TranslationKeys;
+      maxLengthEmail: TranslationKeys;
+      invalidEmail: TranslationKeys;
+      requiredDate: TranslationKeys;
+      requiredSymptoms: TranslationKeys;
+      maxLengthSymptoms: TranslationKeys;
+    };
+    toastMessages: {
+      created: TranslationKeys;
+      updated: TranslationKeys;
+      cancelled: TranslationKeys;
+    };
+  };
+  petDetail: {
+    caretakerLabel: TranslationKeys;
+    emailLabel: TranslationKeys;
+    dateLabel: TranslationKeys;
+    symptomsLabel: TranslationKeys;
+    editButton: TranslationKeys;
+    deleteButton: TranslationKeys;
+    editToast: TranslationKeys;
+    deleteToast: TranslationKeys;
+  };
+  petList: {
+    emptyTitle: TranslationKeys;
+    emptyDescription: TranslationKeys;
+    listTitle: TranslationKeys;
+    listDescription: TranslationKeys;
   };
 };

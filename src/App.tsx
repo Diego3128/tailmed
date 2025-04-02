@@ -1,3 +1,4 @@
+import { ToastContainer, Zoom } from "react-toastify";
 import PetForm from "./components/PetForm";
 import PetList from "./components/PetList";
 
@@ -21,11 +22,24 @@ export default function App() {
           <span className="text-indigo-700">vet</span>
         </h2>
 
-        <div className="p-3 md:p-0 mt-12 flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+        <div className="p-3 md:p-0 mt-12 flex flex-col items-center md:flex-row gap-4 md:gap-8 md:items-start">
           <PetForm />
           <PetList />
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Zoom}
+      />
     </>
   );
 }

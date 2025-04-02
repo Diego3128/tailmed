@@ -2,12 +2,18 @@ import { translations } from "../data/localized-strings";
 import InputError from "./InputError";
 import { DraftPatient } from "../types";
 import { usePatientStore } from "../stores/store";
+import { useEffect } from "react";
 // 3rd party libraries || packages
 import { useForm, SubmitHandler } from "react-hook-form";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 export default function PatientForm() {
   const addNewPatient = usePatientStore((state) => state.addNewPatient);
+  const patienteditingId = usePatientStore((state) => state.patienteditingId);
+  const patients = usePatientStore((state) => state.patients);
+  const updatePatient = usePatientStore((state) => state.updatePatient);
+  const cancelUpdate = usePatientStore((state) => state.cancelUpdate);
 
   const formDefaultValues: DraftPatient = {
     name: "",
@@ -20,11 +26,36 @@ export default function PatientForm() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<DraftPatient>({ defaultValues: formDefaultValues });
 
+  // check if there's an active patientEditingId
+  useEffect(() => {
+    if (patienteditingId) {
+      // filter patient being edited
+      const editingPatient = patients.filter(
+        (patient) => patient.id === patienteditingId
+      )[0];
+      // set form values
+      setValue("name", editingPatient.name);
+      setValue("caretaker", editingPatient.caretaker);
+      setValue("email", editingPatient.email);
+      setValue("date", editingPatient.date);
+      setValue("symptoms", editingPatient.symptoms);
+    } else {
+      reset();
+    }
+  }, [patienteditingId]);
+
   const savePatient: SubmitHandler<DraftPatient> = (data) => {
-    addNewPatient(data);
+    if (patienteditingId) {
+      updatePatient(data);
+      toast.info(translations.petForm.toastMessages.updated.en);
+    } else {
+      addNewPatient(data);
+      toast.info(translations.petForm.toastMessages.created.es);
+    }
     reset();
   };
 
@@ -54,8 +85,11 @@ export default function PatientForm() {
             type="text"
             placeholder={translations.petForm.patientPlaceholder.en}
             {...register("name", {
-              required: "the pet name is required.",
-              maxLength: { value: 20, message: "pet's name is too long." },
+              required: translations.petForm.errors.requiredName.en,
+              maxLength: {
+                value: 20,
+                message: translations.petForm.errors.maxLengthName.en,
+              },
             })}
           />
           {errors.name && (
@@ -75,8 +109,11 @@ export default function PatientForm() {
             type="text"
             placeholder={translations.petForm.caretakerPlaceholder.en}
             {...register("caretaker", {
-              required: "the caretaker name is required.",
-              maxLength: { value: 50, message: "the name is too long." },
+              required: translations.petForm.errors.requiredCaretaker.en,
+              maxLength: {
+                value: 50,
+                message: translations.petForm.errors.maxLengthCaretaker.en,
+              },
             })}
           />
           {errors.caretaker && (
@@ -96,11 +133,14 @@ export default function PatientForm() {
             type="email"
             placeholder={translations.petForm.emailPlaceholder.en}
             {...register("email", {
-              required: "the email is required.",
-              maxLength: { value: 50, message: "the email is too long." },
+              required: translations.petForm.errors.requiredEmail.en,
+              maxLength: {
+                value: 50,
+                message: translations.petForm.errors.maxLengthEmail.en,
+              },
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "invalid email address",
+                message: translations.petForm.errors.invalidEmail.en,
               },
             })}
           />
@@ -119,7 +159,9 @@ export default function PatientForm() {
             id="date"
             className="w-full p-3  border border-gray-100"
             type="date"
-            {...register("date", { required: "the date is required." })}
+            {...register("date", {
+              required: translations.petForm.errors.requiredDate.en,
+            })}
           />
           {errors.date && (
             <InputError>
@@ -137,8 +179,11 @@ export default function PatientForm() {
             className="w-full min-h-20 max-h-44 p-3  border border-gray-100"
             placeholder={translations.petForm.symptomsPlaceholder.en}
             {...register("symptoms", {
-              required: "the symptoms are required.",
-              maxLength: { value: 255, message: "the symptoms are too long." },
+              required: translations.petForm.errors.requiredSymptoms.en,
+              maxLength: {
+                value: 255,
+                message: translations.petForm.errors.maxLengthSymptoms.en,
+              },
             })}
           ></textarea>
           {errors.symptoms && (
@@ -147,6 +192,18 @@ export default function PatientForm() {
             </InputError>
           )}
         </div>
+
+        {patienteditingId && (
+          <button
+            onClick={() => {
+              cancelUpdate();
+              toast.warning(translations.petForm.toastMessages.cancelled.en);
+            }}
+            className="bg-red-500 w-full p-3 text-white uppercase font-bold hover:bg-red-700 cursor-pointer transition-colors mb-3"
+          >
+            {translations.petForm.cancelButton.en}
+          </button>
+        )}
 
         <input
           type="submit"
