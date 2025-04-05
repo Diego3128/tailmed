@@ -3,30 +3,39 @@ import PetForm from "./components/PetForm";
 import PetList from "./components/PetList";
 
 import { translations } from "./data/localized-strings";
+import { LangSwitcher } from "./components/LangSwitcher";
+import { useTranslationStore } from "./stores/translationStore";
 
 export default function App() {
+  const language = useTranslationStore((state) => state.language);
   return (
     <>
-      <header className="bg-indigo-700 text-white">
-        <div className="container p-3 text-center capitalize">
-          <h1 className="uppercase font-bold text-2xl">
-            {translations.header.title.en}
+      <header className="bg-indigo-700 text-white shadow-md shadow-indigo-400">
+        <div className="mx-auto container p-3 text-center md:relative">
+          <h1 className="uppercase font-extrabold text-3xl tracking-wide">
+            {translations.header.title[language]}
+            <span className="text-base font-medium block mt-1 text-indigo-100">
+              {translations.header.slogan[language]}
+            </span>
           </h1>
-          <span>{translations.header.slogan.en}</span>
+          <div className="mt-4 flex justify-center md:absolute top-2 left-3">
+            <LangSwitcher />
+          </div>
         </div>
       </header>
-      <div className="container mx-auto mt-4 pb-10">
-        <h2 className="capitalize font-black text-3xl text-center md:w-2/3 md:mx-auto">
-          {" "}
-          {translations.app.sectionTitle.en}{" "}
-          <span className="text-indigo-700">vet</span>
+  
+      <main className="container mx-auto mt-8 pb-16 px-4">
+        <h2 className="capitalize font-black text-3xl text-center md:w-3/4 md:mx-auto leading-snug">
+          <span className="text-indigo-700">vet </span>
+          {translations.app.sectionTitle[language]}
         </h2>
-
-        <div className="p-3 md:p-0 mt-12 flex flex-col items-center md:flex-row gap-4 md:gap-8 md:items-start">
+  
+        <section className="mt-12 flex flex-col items-center md:flex-row gap-6 md:gap-10 md:items-start">
           <PetForm />
           <PetList />
-        </div>
-      </div>
+        </section>
+      </main>
+  
       <ToastContainer
         position="top-center"
         autoClose={4000}
@@ -41,5 +50,5 @@ export default function App() {
         transition={Zoom}
       />
     </>
-  );
+  );  
 }

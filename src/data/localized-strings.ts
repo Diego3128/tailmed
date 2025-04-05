@@ -8,7 +8,7 @@ export const translations: Translation = {
     },
     slogan: {
       en: "smart care for furry friends.",
-      es: "cuidado adecuado paraamigos peludos. ",
+      es: "cuidado adecuado para amigos peludos. ",
     },
   },
   app: {
